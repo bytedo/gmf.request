@@ -7,8 +7,8 @@
   "type": "module",
   "keywords": ["five", "node-five", "five.js", "fivejs", "request", "http"],
   "dependencies": {
-    "@bytedo/es.shim": "^1.0.0",
-    "iofs": "^1.1.0"
+    "es.shim": "^2.0.0",
+    "iofs": "^1.4.0"
   },
   "repository": "https://github.com/bytedo/gmf.request.git",
   "license": "MIT"
