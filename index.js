@@ -6,6 +6,7 @@
 import 'es.shim'
 
 import Parser from './lib/index.js'
+import { parseCookie } from './lib/cookie.js'
 import fs from 'iofs'
 import URL from 'url'
 import QS from 'querystring'
@@ -29,6 +30,7 @@ export default class Request {
     hideProperty(this, 'origin', { req, res })
     hideProperty(this, '__GET__', null)
     hideProperty(this, '__POST__', null)
+    hideProperty(this, '__COOKIE__', parseCookie(this.header('cookie') || ''))
 
     this.__fixUrl()
 
@@ -258,6 +260,14 @@ export default class Request {
   header(key = '') {
     key = key ? (key + '').toLowerCase() : null
     return !!key ? this.origin.req.headers[key] : this.origin.req.headers
+  }
+
+  // 读取cookie
+  cookie(key) {
+    if (key) {
+      return this.__COOKIE__[key]
+    }
+    return this.__COOKIE__
   }
 
   //获取客户端IP

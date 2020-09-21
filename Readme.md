@@ -124,3 +124,10 @@ request.header() // {'user-agent': '...'[, ...]}
 > 获取客户端IP地址.
 >
 > It would return '127.0.0.1' maybe if in local area network.
+
+
+### cookie(key)
+
+> 获取客户端带上的cookie.
+> 不传key时返回所有的
+
