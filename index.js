@@ -12,6 +12,8 @@ import URL from 'url'
 import QS from 'querystring'
 
 const tmpdir = process.cwd() + '/.tmp/'
+const encode = encodeURIComponent
+const decode = decodeURIComponent
 
 function hideProperty(host, name, value) {
   Object.defineProperty(host, name, {
@@ -56,13 +58,15 @@ export default class Request {
     let pathArr = []
     let tmpArr = []
 
+    _url = decode(_url)
+
     // URL上不允许有非法字符
     if (/[^\w\-\/\.]/.test(_url)) {
       this.origin.res.rendered = true
       this.origin.res.writeHead(400, {
-        'X-debug': 'url[' + _url + '] contains illegal characters'
+        'X-debug': `url [/${encode(_url)}] contains invalid characters`
       })
-      return this.origin.res.end('')
+      return this.origin.res.end(`Invalid characters: /${_url}`)
     }
 
     // 修正url中可能出现的"多斜杠"
