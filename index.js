@@ -10,10 +10,11 @@ import { parseCookie } from './lib/cookie.js'
 import fs from 'iofs'
 import URL from 'url'
 import QS from 'querystring'
+import PATH from 'path'
 
-var __dirname = path.dirname(URL.fileURLToPath(import.meta.url))
+var __dirname = PATH.dirname(URL.fileURLToPath(import.meta.url))
 
-var tmpdir = path.resolve(__dirname, './.tmp/')
+var tmpdir = PATH.resolve(__dirname, './.tmp/')
 var encode = encodeURIComponent
 var decode = decodeURIComponent
 
@@ -40,6 +41,8 @@ export default class Request {
 
     if (fs.isdir(tmpdir)) {
       fs.rm(tmpdir)
+    } else {
+      fs.mkdir(tmpdir)
     }
   }
 
