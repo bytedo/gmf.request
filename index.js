@@ -11,9 +11,11 @@ import fs from 'iofs'
 import URL from 'url'
 import QS from 'querystring'
 
-const tmpdir = process.cwd() + '/.tmp/'
-const encode = encodeURIComponent
-const decode = decodeURIComponent
+var __dirname = path.dirname(URL.fileURLToPath(import.meta.url))
+
+var tmpdir = path.resolve(__dirname, './.tmp/')
+var encode = encodeURIComponent
+var decode = decodeURIComponent
 
 function hideProperty(host, name, value) {
   Object.defineProperty(host, name, {
@@ -36,16 +38,8 @@ export default class Request {
 
     this.__fixUrl()
 
-    if (!fs.isdir(tmpdir)) {
-      fs.mkdir(tmpdir)
-    } else {
-      // 清除2个小时前的所有临时文件
-      let list = fs.ls(tmpdir)
-      list.forEach(it => {
-        if (fs.stat(it).atime < Date.now() - 2 * 3600 * 1000) {
-          fs.rm(it)
-        }
-      })
+    if (fs.isdir(tmpdir)) {
+      fs.rm(tmpdir)
     }
   }
 
