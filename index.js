@@ -12,6 +12,8 @@ import URL from 'url'
 import QS from 'querystring'
 import PATH from 'path'
 
+const DEFAULT_FORM_TYPE = 'application/x-www-form-urlencoded'
+
 var __dirname = PATH.dirname(URL.fileURLToPath(import.meta.url))
 
 var tmpdir = PATH.resolve(__dirname, './.tmp/')
@@ -147,6 +149,7 @@ export default class Request {
   post(key = '', xss = true) {
     let para = {}
     let out = Promise.defer()
+    let form, contentType
     xss = !!xss
 
     //如果之前已经缓存过,则直接从缓存读取
@@ -158,7 +161,9 @@ export default class Request {
       }
     }
 
-    let form = new Parser()
+    contentType = this.header('content-type') || DEFAULT_FORM_TYPE
+
+    form = new Parser()
     form.uploadDir = tmpdir
     form.parse(this.origin.req)
 
@@ -167,7 +172,7 @@ export default class Request {
         para = value
         return
       }
-      if (~this.header('content-type').indexOf('urlencoded')) {
+      if (~contentType.indexOf('urlencoded')) {
         if (
           name.slice(0, 2) === '{"' &&
           (name.slice(-2) === '"}' || value.slice(-2) === '"}')
@@ -237,7 +242,7 @@ export default class Request {
     form.on('error', out.reject)
 
     form.on('end', err => {
-      if (~this.header('content-type').indexOf('urlencoded')) {
+      if (~contentType.indexOf('urlencoded')) {
         for (let i in para) {
           if (typeof para[i] === 'string') {
             if (!para[i]) {
